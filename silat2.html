@@ -328,7 +328,7 @@
     </div>
   </div>
 
-  <!-- FLOATING ADMIN / USER LOGIN MODAL -->
+  <!-- FLOATING LOGIN MODAL (Google Sign-In Satu Tempat) -->
   <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden items-center justify-center p-4">
     <div class="w-full max-w-sm bg-neutral-950 border border-gold-500/20 rounded-2xl p-6 md:p-8 shadow-2xl relative">
       <div class="text-center mb-6">
@@ -336,45 +336,44 @@
           <i data-lucide="shield-check" class="w-6 h-6"></i>
         </div>
         <h2 class="text-sm font-black tracking-wider text-gold-500 uppercase">Log Masuk Sistem</h2>
-        <p class="text-[10px] text-neutral-400 mt-1">Sila masukkan ID anda untuk menguruskan data.</p>
+        <p class="text-[10px] text-neutral-400 mt-1">Log masuk menggunakan akaun Google yang berdaftar.</p>
       </div>
 
-      <form id="loginForm" class="space-y-4">
-        <div>
-          <label for="loginID" class="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">ID Pengguna / Telefon</label>
-          <input type="text" id="loginID" placeholder="Contoh: admin / user" class="w-full px-4 py-2.5 bg-neutral-900 border border-neutral-850 rounded-xl text-neutral-100 placeholder-neutral-700 focus:outline-none focus:border-gold-500 text-xs font-medium" required>
-        </div>
-
-        <div>
-          <label for="loginPassword" class="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Kata Laluan</label>
-          <div class="relative">
-            <input type="password" id="loginPassword" placeholder="Sila masukkan kata laluan" class="w-full px-4 py-2.5 pr-10 bg-neutral-900 border border-neutral-850 rounded-xl text-neutral-100 placeholder-neutral-700 focus:outline-none focus:border-gold-500 text-xs font-medium" required>
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-2.5 text-neutral-500 hover:text-gold-500 transition-premium">
-              <span id="passwordEyeWrapper">
-                <i data-lucide="eye" class="w-4 h-4"></i>
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between text-[10px] pt-1 select-none">
-          <label class="flex items-center gap-2 cursor-pointer text-neutral-400">
-            <input type="checkbox" id="rememberMe" class="rounded border-neutral-800 bg-neutral-900 text-gold-500 focus:ring-0 focus:ring-offset-0">
-            <span>Ingat Kata Laluan</span>
-          </label>
-        </div>
+      <div id="loginForm" class="space-y-4">
+        <!-- Google Sign-In Button -->
+        <button onclick="handleGoogleLogin()" id="googleLoginBtn" class="w-full py-3.5 bg-white hover:bg-neutral-100 text-black font-bold rounded-2xl text-sm flex items-center justify-center gap-3 transition-premium shadow-lg border border-neutral-200 active:scale-[0.98]">
+          <svg width="20" height="20" viewBox="0 0 24 24" class="shrink-0">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span>Log Masuk dengan Google</span>
+        </button>
 
         <!-- Inline error message -->
         <div id="loginError" class="hidden bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-2.5 flex items-center gap-2 text-xs text-red-400 font-semibold">
           <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
-          <span id="loginErrorMsg">ID Pengguna atau Kata Laluan tidak sah. Sila cuba semula.</span>
+          <span id="loginErrorMsg">Akaun anda belum didaftarkan. Sila hubungi admin untuk pengesahan.</span>
+        </div>
+
+        <!-- Loading state -->
+        <div id="loginLoading" class="hidden text-center py-4">
+          <div class="w-8 h-8 border-2 border-gold-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <p class="text-[10px] text-neutral-400">Menyemak peranan akaun...</p>
         </div>
 
         <div class="flex gap-2 pt-2">
-          <button type="button" class="flex-1 py-2 bg-neutral-900 hover:bg-neutral-850 text-neutral-300 rounded-xl font-bold transition-premium text-xs border border-neutral-800" onclick="closeLoginModal()">Batal</button>
-          <button type="submit" class="flex-1 py-2 bg-gold-500 hover:bg-gold-600 text-neutral-950 font-bold rounded-xl transition-premium text-xs uppercase tracking-wider">Masuk</button>
+          <button type="button" class="w-full py-2 bg-neutral-900 hover:bg-neutral-850 text-neutral-300 rounded-xl font-bold transition-premium text-xs border border-neutral-800" onclick="closeLoginModal()">Batal</button>
         </div>
-      </form>
+
+        <div class="bg-neutral-900/40 border border-neutral-800 rounded-xl p-3 text-center mt-2">
+          <p class="text-[9px] text-neutral-500 leading-relaxed">
+            Sistem ini menggunakan satu login Google untuk semua peranan.<br>
+            Peranan anda akan dikenal pasti secara automatik.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -439,25 +438,28 @@
           <button class="tab-btn active shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-white text-black shadow-md" data-tab="announcements">
             <span>📢</span><span>MAKLUMAN</span>
           </button>
-          <!-- PENDAFTARAN: hidden from nav — accessible via button only -->
-          <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="members">
+          <!-- ADMIN TABS -->
+          <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="admin-pendaftaran">
             <span>📝</span><span>PENDAFTARAN</span>
           </button>
           <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="senarai-ahli">
             <span>👥</span><span>SENARAI AHLI</span>
           </button>
+          <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="admin-records">
+            <span>💰</span><span>REKOD BAYARAN</span>
+          </button>
+          <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="settings-tab">
+            <span>⚙️</span><span>TETAPAN</span>
+          </button>
+          <!-- WARIS TABS -->
           <button class="tab-btn waris-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="profile">
             <span>👤</span><span>PROFIL SAYA</span>
           </button>
           <button class="tab-btn waris-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="pengurusan">
             <span>🗂️</span><span>PENGURUSAN</span>
           </button>
-          <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="admin-records">
-            <span>📋</span><span>REKOD</span>
-          </button>
-          <button class="tab-btn admin-only-tab hidden shrink-0 py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-400" data-tab="settings-tab">
-            <span>⚙️</span><span>TETAPAN</span>
-          </button>
+          <!-- HIDDEN: Public registration form (accessible via button only) -->
+          <button class="tab-btn hidden" data-tab="members" style="display:none!important;"></button>
         </div>
       </div>
     </nav>
@@ -707,6 +709,42 @@
         </div>
       </div>
 
+
+      <!-- ========================================== -->
+      <!-- TAB: PENDAFTARAN ADMIN (Semak & Approve)  -->
+      <!-- ========================================== -->
+      <div class="tab-section hidden space-y-5" id="admin-pendaftaran">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-900 pb-4">
+          <div>
+            <h2 class="text-base font-black tracking-wider text-white uppercase">SEMAKAN PENDAFTARAN</h2>
+            <p class="text-[10px] text-neutral-500 mt-1">Semak dan luluskan permohonan pendaftaran ahli baharu daripada waris.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="adminPendaftaranFilter" onchange="renderAdminPendaftaran()" class="px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-xl text-xs text-neutral-200 focus:outline-none focus:border-gold-500">
+              <option value="all">Semua Status</option>
+              <option value="pending" selected>Menunggu Semakan</option>
+              <option value="approved">Diluluskan</option>
+              <option value="rejected">Ditolak</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-gold-500/10 border border-gold-500/20 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-gold-400 uppercase tracking-wider">Menunggu</p>
+            <p class="text-lg font-black text-gold-500" id="statPendaftaranPending">0</p>
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-emerald-400 uppercase tracking-wider">Diluluskan</p>
+            <p class="text-lg font-black text-emerald-400" id="statPendaftaranApproved">0</p>
+          </div>
+          <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-red-400 uppercase tracking-wider">Ditolak</p>
+            <p class="text-lg font-black text-red-400" id="statPendaftaranRejected">0</p>
+          </div>
+        </div>
+        <div id="adminPendaftaranList" class="space-y-4"></div>
+      </div>
+
       <!-- ========================================== -->
       <!-- TAB 3: SENARAI AHLI                       -->
       <!-- ========================================== -->
@@ -750,58 +788,88 @@
       <!-- ========================================== -->
       <!-- TAB 4: REKOD BAYARAN BULANAN (ADMIN)       -->
       <!-- ========================================== -->
+      <!-- ========================================== -->
+      <!-- TAB: REKOD BAYARAN (ADMIN) - REDESIGNED   -->
+      <!-- ========================================== -->
       <div class="tab-section hidden space-y-6" id="admin-records">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-900 pb-4">
           <div>
-            <h2 class="text-base font-black tracking-wider text-white uppercase">REKOD BAYARAN BULANAN</h2>
-            <p class="text-[10px] text-neutral-500 mt-1">Senarai status bayaran ahli disusun mengikut waris — setiap bulan.</p>
+            <h2 class="text-base font-black tracking-wider text-white uppercase">REKOD BAYARAN</h2>
+            <p class="text-[10px] text-neutral-500 mt-1">Semak slip bayaran, sahkan atau tolak bayaran daripada waris.</p>
           </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <label class="text-xs font-bold text-neutral-400 uppercase">Pilih Bulan:</label>
-            <input type="month" id="adminRecordMonth" onchange="syncMonth('adminRecordMonth')" class="bg-black border border-neutral-800 rounded-lg text-neutral-100 text-xs px-2 py-1.5 focus:outline-none focus:border-gold-500">
+          <div class="flex items-center gap-2">
+            <button onclick="toggleAdminPayView('list')" id="payViewListBtn" class="px-3 py-1.5 bg-gold-500 text-neutral-950 text-[10px] font-black rounded-lg transition-premium">Senarai</button>
+            <button onclick="toggleAdminPayView('member')" id="payViewMemberBtn" class="px-3 py-1.5 bg-neutral-900 border border-neutral-800 text-neutral-300 text-[10px] font-bold rounded-lg transition-premium hover:bg-neutral-800">Ikut Ahli</button>
           </div>
-        </div>
-        <div id="adminRecordsList" class="space-y-4">
-          <!-- Populated by JS -->
         </div>
 
-        <!-- Senarai Status Pembayaran -->
-        <div class="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-6 shadow-xl space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-850">
-            <div>
-              <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                <span>💰</span><span>SENARAI STATUS PEMBAYARAN</span>
-              </h3>
-              <div class="flex items-center gap-4 mt-3">
-                <div class="bg-neutral-950 border border-neutral-850 rounded-xl px-4 py-2 text-center">
-                  <p class="text-[8px] font-bold text-neutral-500 uppercase tracking-wide">Jumlah Ahli</p>
-                  <h4 class="text-base font-bold text-white mt-0.5" id="statTotalChildren">0</h4>
-                </div>
-                <div class="bg-neutral-950 border border-neutral-850 rounded-xl px-4 py-2 text-center">
-                  <p class="text-[8px] font-bold text-neutral-500 uppercase tracking-wide">Sudah Lunas</p>
-                  <h4 class="text-base font-bold text-emerald-400 mt-0.5" id="statPaidCount">0</h4>
-                </div>
+        <!-- Kad Statistik -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-gold-500/10 border border-gold-500/20 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-gold-400 uppercase tracking-wider">Menunggu Semakan</p>
+            <p class="text-xl font-black text-gold-500" id="statBayaranPending">0</p>
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-emerald-400 uppercase tracking-wider">Disahkan</p>
+            <p class="text-xl font-black text-emerald-400" id="statBayaranPaid">0</p>
+          </div>
+          <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-red-400 uppercase tracking-wider">Ditolak</p>
+            <p class="text-xl font-black text-red-400" id="statBayaranRejected">0</p>
+          </div>
+          <div class="bg-neutral-800/50 border border-neutral-700 rounded-xl p-3 text-center">
+            <p class="text-[8px] font-bold text-neutral-400 uppercase tracking-wider">Belum Bayar</p>
+            <p class="text-xl font-black text-neutral-400" id="statBayaranUnpaid">0</p>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="bg-neutral-900/40 border border-neutral-800 rounded-xl p-4">
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <div class="col-span-2 sm:col-span-1">
+              <label class="block text-[8px] font-bold text-neutral-500 uppercase mb-1">Carian</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-neutral-500"><i data-lucide="search" class="w-3 h-3"></i></span>
+                <input type="text" id="searchPayment" oninput="renderAdminPayments()" placeholder="Nama ahli / waris..." class="w-full pl-8 pr-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-neutral-200 placeholder-neutral-700 focus:outline-none focus:border-gold-500 text-xs">
               </div>
             </div>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-              <div class="flex items-center gap-2">
-                <label for="paymentMonth" class="text-xs font-bold text-neutral-400 uppercase whitespace-nowrap">Pilih Bulan:</label>
-                <input type="month" id="paymentMonth" onchange="syncMonth('paymentMonth')" class="bg-black border border-neutral-800 rounded-lg text-neutral-100 text-xs px-2 py-1.5 focus:outline-none focus:border-gold-500">
-              </div>
-              <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-500">
-                  <i data-lucide="search" class="w-3.5 h-3.5"></i>
-                </span>
-                <input type="text" id="searchPayment" oninput="renderPayments()" placeholder="Cari nama pesilat..." class="w-full sm:w-52 pl-9 pr-4 py-2 bg-black border border-neutral-850 rounded-xl text-neutral-200 placeholder-neutral-700 focus:outline-none focus:border-gold-500 text-xs">
-              </div>
+            <div>
+              <label class="block text-[8px] font-bold text-neutral-500 uppercase mb-1">Bulan</label>
+              <input type="month" id="paymentMonth" onchange="renderAdminPayments()" class="w-full bg-neutral-950 border border-neutral-800 rounded-lg text-neutral-100 text-xs px-2 py-2 focus:outline-none focus:border-gold-500">
+            </div>
+            <div>
+              <label class="block text-[8px] font-bold text-neutral-500 uppercase mb-1">Status</label>
+              <select id="filterPayStatus" onchange="renderAdminPayments()" class="w-full px-2 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none focus:border-gold-500">
+                <option value="all">Semua</option>
+                <option value="pending">Menunggu Semakan</option>
+                <option value="paid">Disahkan</option>
+                <option value="rejected">Ditolak</option>
+                <option value="unpaid">Belum Bayar</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[8px] font-bold text-neutral-500 uppercase mb-1">Jenis</label>
+              <select id="filterPayType" onchange="renderAdminPayments()" class="w-full px-2 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none focus:border-gold-500">
+                <option value="all">Semua</option>
+                <option value="monthly_ihsan">Yuran Bulanan</option>
+                <option value="annual">Pendaftaran</option>
+                <option value="other">Lain-lain</option>
+              </select>
             </div>
           </div>
-          <div id="paymentsList" class="space-y-3"></div>
+        </div>
+
+        <!-- Payment List View -->
+        <div id="adminPayListView" class="space-y-3">
+          <div id="adminPaymentsList" class="space-y-3"></div>
+        </div>
+
+        <!-- Payment By Member View (hidden by default) -->
+        <div id="adminPayMemberView" class="hidden space-y-4">
+          <div id="adminPayMemberList" class="space-y-4"></div>
         </div>
 
       </div>
-
-      <!-- ========================================== -->
       <!-- TAB 6: TETAPAN (ADMIN ONLY)               -->
       <!-- ========================================== -->
       <div class="tab-section hidden space-y-6" id="settings-tab">
@@ -1249,6 +1317,100 @@
     </div>
   </div>
 
+
+  <!-- MODAL: TOLAK PENDAFTARAN -->
+  <div id="rejectPendaftaranModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-4">
+    <div class="bg-neutral-950 border border-red-500/20 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <h3 class="text-sm font-black text-red-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <i data-lucide="x-circle" class="w-5 h-5"></i> Tolak Pendaftaran
+      </h3>
+      <div class="space-y-3">
+        <p class="text-xs text-neutral-300" id="rejectPendaftaranInfo">-</p>
+        <div>
+          <label class="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Catatan Admin <span class="text-red-400">*</span></label>
+          <textarea id="rejectPendaftaranNote" rows="3" placeholder="Contoh: Maklumat tidak lengkap..." class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none focus:border-red-500 resize-none"></textarea>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-5">
+        <button onclick="closeRejectPendaftaranModal()" class="flex-1 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 rounded-xl font-bold text-xs border border-neutral-800">Batal</button>
+        <button onclick="confirmRejectPendaftaran()" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl text-xs">Tolak Pendaftaran</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DETAIL PENDAFTARAN -->
+  <div id="detailPendaftaranModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] hidden items-center justify-center p-4">
+    <div class="bg-neutral-950 border border-gold-500/20 rounded-2xl max-w-lg w-full p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-neutral-800">
+        <h3 class="text-sm font-black text-gold-500 uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="file-text" class="w-5 h-5"></i> Detail Pendaftaran
+        </h3>
+        <button onclick="closeDetailPendaftaranModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-premium">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div id="detailPendaftaranContent" class="space-y-4"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: LIHAT RESIT BAYARAN -->
+  <div id="viewReceiptModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[60] hidden items-center justify-center p-4">
+    <div class="bg-neutral-950 border border-gold-500/20 rounded-2xl max-w-lg w-full p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-neutral-800">
+        <h3 class="text-sm font-black text-gold-500 uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="receipt" class="w-5 h-5"></i> Resit Bayaran
+        </h3>
+        <button onclick="closeViewReceiptModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white transition-premium">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div id="viewReceiptContent" class="space-y-4"></div>
+      <div class="flex gap-3 mt-5 pt-4 border-t border-neutral-800">
+        <button onclick="closeViewReceiptModal()" class="flex-1 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 rounded-xl font-bold text-xs border border-neutral-800">Tutup</button>
+        <button onclick="sahkanBayaranFromModal()" id="modalSahkanBtn" class="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl text-xs">Sahkan</button>
+        <button onclick="tolakBayaranFromModal()" id="modalTolakBtn" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl text-xs">Tolak</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TOLAK BAYARAN -->
+  <div id="rejectPaymentModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-4">
+    <div class="bg-neutral-950 border border-red-500/20 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <h3 class="text-sm font-black text-red-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <i data-lucide="x-circle" class="w-5 h-5"></i> Tolak Bayaran
+      </h3>
+      <div class="space-y-3">
+        <p class="text-xs text-neutral-300" id="rejectPaymentInfo">-</p>
+        <div>
+          <label class="block text-[9px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Catatan Admin <span class="text-red-400">*</span></label>
+          <textarea id="rejectPaymentNote" rows="3" placeholder="Contoh: Resit tidak jelas, jumlah tidak mencukupi..." class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none focus:border-red-500 resize-none"></textarea>
+        </div>
+        <div id="rejectPaymentReceiptPreview" class="hidden">
+          <img id="rejectPaymentReceiptImg" class="max-h-32 object-contain rounded-lg border border-neutral-800 w-full">
+        </div>
+      </div>
+      <div class="flex gap-3 mt-5">
+        <button onclick="closeRejectPaymentModal()" class="flex-1 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 rounded-xl font-bold text-xs border border-neutral-800">Batal</button>
+        <button onclick="confirmRejectPayment()" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-black rounded-xl text-xs">Tolak Bayaran</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SAHKAN BAYARAN CONFIRMATION -->
+  <div id="confirmPaymentModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-4">
+    <div class="bg-neutral-950 border border-emerald-500/20 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center">
+      <div class="w-14 h-14 mx-auto bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 mb-4">
+        <i data-lucide="check-circle" class="w-7 h-7"></i>
+      </div>
+      <h3 class="text-sm font-black text-white mb-2">Sahkan Bayaran?</h3>
+      <p class="text-xs text-neutral-400" id="confirmPaymentInfo">Adakah anda pasti mahu sahkan bayaran ini?</p>
+      <div class="flex gap-3 mt-6">
+        <button onclick="closeConfirmPaymentModal()" class="flex-1 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-300 rounded-xl font-bold text-xs border border-neutral-800">Batal</button>
+        <button onclick="confirmSahkanPayment()" class="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl text-xs">Ya, Sahkan</button>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS & LOGIK SISTEM -->
   <script>
         // =========================================================================
@@ -1319,6 +1481,8 @@
                 updateStats();
                 renderPortalAnnouncements();
                 renderAdminRecords();
+                renderAdminPendaftaran();
+                renderAdminPayments();
                 renderProfileTab();
                 renderPengurusanTab();
                 updatePortalRegBtn();
@@ -1348,8 +1512,19 @@
 
                     // Initialize Firebase Auth
                     _firebaseAuth = firebase.auth();
-                    _firebaseAuth.onAuthStateChanged(user => {
+                    _firebaseAuth.onAuthStateChanged(async user => {
                         firebaseUser = user;
+                        // Check role if user logged in
+                        if (user && !currentUser) {
+                            try {
+                                const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+                                if (userDoc.exists) {
+                                    const userData = userDoc.data();
+                                    _currentUserRole = userData.role || 'waris';
+                                    _currentUserDoc = userData;
+                                }
+                            } catch(e) { console.log('Role check skip:', e); }
+                        }
                         renderSidebar();
                         renderAnnSlider();
                         updateAccessMode();
@@ -1421,10 +1596,7 @@
             }
 
             // Bind Actions
-            document.getElementById('loginForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await handleLogin();
-            });
+            // Login form is now Google-based, no form submit needed
 
             document.getElementById('memberForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1479,14 +1651,11 @@
                     btn.className = "tab-btn py-2 px-3 rounded-xl font-black text-xs transition-premium flex items-center gap-2 bg-white text-black shadow-md";
                     if (isAdminOnly) btn.classList.add('admin-only-tab');
 
+                    if (tabName === 'admin-pendaftaran') {
+                        renderAdminPendaftaran();
+                    }
                     if (tabName === 'admin-records') {
-                        const adminMonth = document.getElementById('adminRecordMonth');
-                        if (adminMonth && !adminMonth.value) {
-                            adminMonth.value = document.getElementById('paymentMonth')?.value || '';
-                        }
-                        renderAdminRecords();
-                        renderPayments();
-                        updateStats();
+                        renderAdminPayments();
                     }
                     if (tabName === 'profile') {
                         renderProfileTab();
@@ -1550,7 +1719,12 @@
             const modal = document.getElementById('loginModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            document.getElementById('loginForm').reset();
+            const loginError = document.getElementById('loginError');
+            const loginLoading = document.getElementById('loginLoading');
+            const googleBtn = document.getElementById('googleLoginBtn');
+            if (loginError) { loginError.classList.add('hidden'); loginError.classList.remove('flex'); }
+            if (loginLoading) loginLoading.classList.add('hidden');
+            if (googleBtn) googleBtn.classList.remove('hidden');
         }
 
         function togglePasswordVisibility() {
@@ -1567,7 +1741,10 @@
         }
 
         async function handleLogin() {
-            const phone = document.getElementById('loginID').value.trim();
+            // Old login deprecated - use Google login
+            handleGoogleLogin();
+            return;
+            const phone = document.getElementById('loginID')?.value?.trim() || '';
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
             const loginError = document.getElementById('loginError');
@@ -1677,7 +1854,7 @@
                 userMobileSidebar?.classList.remove('hidden');
                 annSliderSection?.classList.remove('hidden');
             } else {
-                roleTag.textContent          = isAdmin ? "Pentadbir" : "Waris";
+                roleTag.textContent          = isAdmin ? (_currentUserRole === 'superadmin' ? 'PENTADBIR UTAMA' : 'PENTADBIR') : "Waris";
                 roleNameDisplay.textContent  = currentUser.admin_name;
                 roleDot.className            = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
                 navLoginBtn.classList.add('hidden');
@@ -5016,5 +5193,6 @@
         // Jalankan mulakan sistem setelah dokumen selesai dimuatkan sepenuhnya
         initApp();
   </script>
+  <script src="admin_functions.js"></script>
  </body>
 </html>
